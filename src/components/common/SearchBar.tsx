@@ -46,12 +46,12 @@ const styles = StyleSheet.create({
   searchWrapper: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: COLORS.CARD_BG,
-    borderRadius: 16,
+    backgroundColor: "transparent",
+    borderRadius: 25,
     paddingHorizontal: 16,
     height: 48,
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.1)",
+    borderColor: "white",
   },
   searchIcon: {
     marginRight: 12,
