@@ -25,8 +25,8 @@ export const TabNavigator = () => {
               {/* Icon */}
               <Feather
                 name={iconName}
-                size={focused ? size + 2 : size}
-                color="#000"
+                size={size}
+                color="#FFFFFF"
                 style={styles.icon}
               />
 
@@ -66,35 +66,27 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: "#000",
+    backgroundColor: "#FFFFFF",
    
   },
   icon: {
     zIndex: 1,
   },
   tabBarStyle: {
-    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    backgroundColor: "#000000",
     position: "absolute",
-    bottom: 30,
+    bottom: 0,
     left: 16,
     right: 16,
     borderRadius: 28,
-    height: 65,
-    width: "93%",
-    marginLeft:15,
-    paddingBottom: 8,
+    height: 80,
+    width: "100%",
+    paddingBottom: 20,
     paddingTop: 10,
-    shadowColor: "#000000",
-    shadowOffset: {
-      width: 0,
-      height: 8,
-    },
     shadowOpacity: 0.12,
     shadowRadius: 16,
     elevation: 12,
     borderTopWidth: 0,
-    borderWidth: 0.5,
-    borderColor: "rgba(255, 255, 255, 0.3)",
   },
   blurContainer: {
     position: "absolute",
