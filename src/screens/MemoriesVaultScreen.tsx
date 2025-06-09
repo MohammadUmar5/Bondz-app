@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { View, Text, ScrollView, Platform, UIManager, Alert } from "react-native";
-import { SearchBar } from "../components/common/SearchBar";
+import { View, Text, ScrollView, Platform, UIManager, Alert, Dimensions } from "react-native";
 import { MemoryCard } from "../components/cards/MyBondzCard";
-import { MemoryItemCard } from "../components/cards/MemoryItemCard";
-import { MemorySectionHeader } from "../components/common/MemorySectionHeader";
+import { MemoryCollectionCard } from "../components/cards/MemoryCollectionCard";
 import { collections } from "../constants/my-bondz";
 import { memorySections, MemoryItem, MemorySection } from "../constants/my-memories";
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 if (
   Platform.OS === "android" &&
@@ -16,18 +16,18 @@ if (
 
 export const MemoriesVaultScreen: React.FC = () => {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
-  const [searchText, setSearchText] = useState<string>("");
   const [sections, setSections] = useState<MemorySection[]>(memorySections);
+  const [expandedSectionId, setExpandedSectionId] = useState<string | null>(null);
 
   const handlePress = (index: number) => {
     setExpandedIndex(expandedIndex === index ? null : index);
   };
 
-  const handleMemoryPress = (item: MemoryItem) => {
-    // Handle memory item press - you can implement modal or navigation here
+  const handleMemoryPress = (sectionId: string) => {
+    setExpandedSectionId(expandedSectionId === sectionId ? null : sectionId);
   };
 
-  const handleAddToSection = (sectionId: string, sectionTitle: string) => {
+  const handleAddMemory = (sectionId: string, sectionTitle: string) => {
     Alert.alert(
       "Add Memory",
       `Add new memory to "${sectionTitle}"`,
@@ -53,55 +53,84 @@ export const MemoriesVaultScreen: React.FC = () => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#000", paddingHorizontal: 15, paddingTop: 50 }}>
-      <Text style={{ fontSize: 26, fontWeight: "300", color: "#fff", marginHorizontal: 10, marginBottom: 20 }}>
+    <View style={{ 
+      flex: 1, 
+      backgroundColor: "#000", 
+      paddingTop: 50 
+    }}>
+      <Text style={{ 
+        fontSize: 35, 
+        fontWeight: "800", 
+        color: "#fff", 
+        marginHorizontal: 25, 
+        marginBottom: 20 
+      }}>
         My collections
       </Text>
-
-      <SearchBar searchText={searchText} onSearchTextChange={setSearchText} />
-
-      <ScrollView contentContainerStyle={{ paddingBottom: 120 }} showsVerticalScrollIndicator={false}>
-        {/* My Memories Section - Now First */}
-        <View style={{ marginBottom: 30 }}>
-          <Text style={{ 
-            fontSize: 20, 
-            fontWeight: "600", 
-            color: "#fff", 
-            marginHorizontal: 10, 
-            marginBottom: 15 
+      <View
+        style={{
+          height: 1,
+          backgroundColor: "#888888",
+          marginLeft: 25,
+        }}
+      />
+      <ScrollView 
+        contentContainerStyle={{ paddingBottom: 120 }} 
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Memories Section - iPhone Style */}
+        <View style={{ marginBottom: 30, marginTop: 20 }}>
+          <View style={{ 
+            flexDirection: "row", 
+            justifyContent: "space-between", 
+            alignItems: "center", 
+            marginHorizontal: 25, 
+            marginBottom: 20 
           }}>
-            Memories
-          </Text>
+            <Text style={{ 
+              fontSize: 30, 
+              fontWeight: "700", 
+              color: "#fff" 
+            }}>
+              Memories
+            </Text>
+            <Text style={{ 
+              fontSize: 14, 
+              color: "#007AFF", 
+              fontWeight: "500" 
+            }}>
+              See All
+            </Text>
+          </View>
           
-          {sections.map((section) => (
-            <View key={section.id} style={{ marginBottom: 20 }}>
-              <MemorySectionHeader
-                title={section.sectionTitle}
-                description={section.description}
-                onAddPress={() => handleAddToSection(section.id, section.sectionTitle)}
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ 
+              paddingHorizontal: (screenWidth * 0.05)
+            }}
+            pagingEnabled={false}
+            decelerationRate="fast"
+            snapToInterval={screenWidth * 0.9 + 20}
+            snapToAlignment="start"
+          >
+            {sections.map((section) => (
+              <MemoryCollectionCard
+                key={section.id}
+                section={section}
+                onMemoryPress={() => handleMemoryPress(section.id)}
+                onAddPress={handleAddMemory}
+                expanded={expandedSectionId === section.id}
               />
-              <ScrollView 
-                horizontal 
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ paddingHorizontal: 10 }}
-              >
-                {section.memories.map((item) => (
-                  <MemoryItemCard
-                    key={item.id}
-                    item={item}
-                    onPress={handleMemoryPress}
-                  />
-                ))}
-              </ScrollView>
-            </View>
-          ))}
+            ))}
+          </ScrollView>
         </View>
 
-        {/* My Bondz Section - Now Second */}
-        <View style={{ marginBottom: 30 }}>
+        {/* My Bondz Section */}
+        <View style={{ marginBottom: 30, paddingHorizontal: 15 }}>
           <Text style={{ 
-            fontSize: 20, 
-            fontWeight: "600", 
+            fontSize: 30, 
+            fontWeight: "700", 
             color: "#fff", 
             marginHorizontal: 10, 
             marginBottom: 15 
